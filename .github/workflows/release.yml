@@ -1,0 +1,43 @@
+name: Build Plugin
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Create Release Folder
+      run: |
+        mkdir voltaris-calculator
+        mkdir voltaris-calculator/assets
+        mkdir voltaris-calculator/assets/css
+        mkdir voltaris-calculator/assets/js
+        mkdir voltaris-calculator/includes
+        mkdir voltaris-calculator/templates
+        mkdir voltaris-calculator/languages
+
+    - name: Copy Files
+      run: |
+        cp -R assets/css/* voltaris-calculator/assets/css/
+        cp -R assets/js/* voltaris-calculator/assets/js/
+        cp -R includes/* voltaris-calculator/includes/
+        cp -R templates/* voltaris-calculator/templates/
+        cp voltaris-calculator.php voltaris-calculator/
+        cp README.md voltaris-calculator/
+
+    - name: Create ZIP
+      run: |
+        zip -r voltaris-calculator.zip voltaris-calculator
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: voltaris-calculator
+        path: voltaris-calculator.zip
